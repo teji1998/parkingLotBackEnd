@@ -34,4 +34,9 @@ public class UserService {
             return "Right password";
         return "Wrong password";
     }
+
+    public String deleteUser(UserDTO userDTO){
+        userRepository.delete(findByEmail(userDTO.getEmailId()));
+        return "User deleted";
+    }
 }

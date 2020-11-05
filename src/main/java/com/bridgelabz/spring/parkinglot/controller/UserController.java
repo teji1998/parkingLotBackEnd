@@ -24,4 +24,9 @@ public class UserController {
         String user = userService.loginUser(userDTO);
         return new ResponseEntity(user, HttpStatus.OK);
     }
+    @DeleteMapping("/delete")
+    public ResponseEntity deleteMessage(@RequestBody UserDTO userDTO) {
+        String deleteMessage = userService.deleteUser(userDTO);
+        return new ResponseEntity(deleteMessage, HttpStatus.OK);
+    }
 }
