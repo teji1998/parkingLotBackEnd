@@ -10,13 +10,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
+
 public class SwaggerConfiguration {
     @Bean
     public Docket parkingAPI() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors
-                        .basePackage("com.brigelabz.spring.parkinglot"))
+                        .basePackage("com.bridgelabz.spring.parkinglot"))
                 .paths(PathSelectors.any())
                 .build();
     }
