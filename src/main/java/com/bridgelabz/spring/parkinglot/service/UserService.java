@@ -1,5 +1,6 @@
 package com.bridgelabz.spring.parkinglot.service;
 
+import com.bridgelabz.spring.parkinglot.dto.Password;
 import com.bridgelabz.spring.parkinglot.dto.UserDTO;
 import com.bridgelabz.spring.parkinglot.exception.UserException;
 import com.bridgelabz.spring.parkinglot.model.UserDetails;
@@ -28,6 +29,15 @@ public class UserService {
         mail.setTo(userDTO.getEmailId());
         mail.setSubject("Registration message");
         mail.setText(getVerificationUrl(message));
+        javaMailSender.send(mail);
+    }
+
+    public void sendTokenUrl(UserDTO userDTO, String message) throws MailException {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("tejasvinirpk@gmail.com");
+        mail.setTo(userDTO.getEmailId());
+        mail.setSubject("Token link");
+        mail.setText(message);
         javaMailSender.send(mail);
     }
 
@@ -70,5 +80,26 @@ public class UserService {
         user.get().setVerified(true);
         userRepository.save(user.get());
         return "Verification is successful";
+    }
+
+
+    public String generatingPasswordToken(UserDTO userDTO) {
+        Optional<UserDetails> user = userRepository.findByEmail(userDTO.getEmailId());
+        if (user.isPresent()) {
+            String token = TokenUtility.getToken(user.get().getId());
+            sendTokenUrl(userDTO,token);
+            return "Check your email please!";
+        }
+        return "Email given is incorrect";
+    }
+
+    public String settingPassword(String token, Password password) {
+        Optional<UserDetails> user = userRepository.findById(TokenUtility.decodeJWT(token));
+        if (password.getNewPassword().equals(password.getConfirmPassword())) {
+            user.get().setPassword(password.getConfirmPassword());
+            userRepository.save(user.get());
+            return "Password has been changed";
+        }
+        return "Password is incorrect!";
     }
 }

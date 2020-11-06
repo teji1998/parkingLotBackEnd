@@ -1,5 +1,6 @@
 package com.bridgelabz.spring.parkinglot.controller;
 
+import com.bridgelabz.spring.parkinglot.dto.Password;
 import com.bridgelabz.spring.parkinglot.dto.UserDTO;
 import com.bridgelabz.spring.parkinglot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,17 @@ public class UserController {
     public ResponseEntity verifyUser(@PathVariable String token) {
         String response = userService.verifyingUser(token);
         return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{token}")
+    public ResponseEntity forgotPassword(@PathVariable String token, @RequestBody Password password) {
+        String message = userService.settingPassword(token,password);
+        return new ResponseEntity(message,HttpStatus.OK);
+    }
+
+    @GetMapping("/generatetoken")
+    public  ResponseEntity generateToken(@RequestBody UserDTO userDTO) {
+        String message = userService.generatingPasswordToken(userDTO);
+        return new ResponseEntity(message, HttpStatus.OK);
     }
 }
