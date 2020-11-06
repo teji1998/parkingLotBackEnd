@@ -50,6 +50,8 @@ public class UserService {
         if (userRepository.findByEmail(userDTO.getEmailId()).isPresent())
             return "Email already exists";
         UserDetails user = new UserDetails();
+        user.setName(userDTO.getName());
+        user.setMobileNo(userDTO.getMobileNo());
         user.setEmail(userDTO.getEmailId());
         user.setPassword(userDTO.getPassword());
         UserDetails registeredUser = userRepository.save(user);
@@ -65,9 +67,22 @@ public class UserService {
 
     public String loginUser(UserDTO userDTO) {
         UserDetails user = findByEmail(userDTO.getEmailId());
-        if (user.getPassword().equals(userDTO.getPassword()))
-            return "Right password";
-        return "Wrong password";
+        if (user.getEmail().equals(userDTO.getEmailId())) {
+            if (user.isVerified()) {
+                if (user.getPassword().equals(userDTO.getPassword())) {
+                    Optional<UserDetails> userDetails = userRepository.findByEmail(userDTO.getEmailId());
+                    if (userDetails.isPresent()) {
+                        String token = TokenUtility.getToken(userDetails.get().getId());
+                        sendTokenUrl(userDTO, token);
+                        return "Please check your email";
+                    }
+                    return "Successfully logged in";
+                }
+                return "Wrong password given";
+            }
+            return "Please do the verification first";
+        }
+        return "Email with which you have logged in is wrong";
     }
 
     public String deleteUser(UserDTO userDTO){
