@@ -20,31 +20,33 @@ public class UserController {
         String registrationMessage = userService.registerUser(userDTO);
         return new ResponseEntity(registrationMessage, HttpStatus.OK);
     }
-    @GetMapping("/loginuser")
+    @PostMapping("/loginuser")
     public ResponseEntity getLoginUser(@RequestBody UserDTO userDTO) {
         String user = userService.loginUser(userDTO);
         return new ResponseEntity(user, HttpStatus.OK);
     }
+
+    @PostMapping("/forgotpassword")
+    public ResponseEntity getForgotPassword(@RequestBody UserDTO userDTO) {
+        String user = userService.forgotPassword(userDTO);
+        return new ResponseEntity(user, HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete")
     public ResponseEntity deleteMessage(@RequestBody UserDTO userDTO) {
         String deleteMessage = userService.deleteUser(userDTO);
         return new ResponseEntity(deleteMessage, HttpStatus.OK);
     }
-    @GetMapping("/{token}")
+   @GetMapping("/{token}")
     public ResponseEntity verifyUser(@PathVariable String token) {
         String response = userService.verifyingUser(token);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{token}")
-    public ResponseEntity forgotPassword(@PathVariable String token, @RequestBody Password password) {
+    @PostMapping("/token")
+    public ResponseEntity forgotPassword(@RequestHeader String token, @RequestBody Password password) {
         String message = userService.settingPassword(token,password);
         return new ResponseEntity(message,HttpStatus.OK);
     }
 
-    @GetMapping("/generatetoken")
-    public  ResponseEntity generateToken(@RequestBody UserDTO userDTO) {
-        String message = userService.generatingPasswordToken(userDTO);
-        return new ResponseEntity(message, HttpStatus.OK);
-    }
 }

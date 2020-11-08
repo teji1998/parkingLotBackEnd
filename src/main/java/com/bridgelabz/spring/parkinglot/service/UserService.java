@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,6 +23,9 @@ public class UserService {
 
     @Autowired
     JavaMailSender javaMailSender;
+/*
+    @Autowired
+    PasswordEncoder passwordEncoder;*/
 
     public void sendSimpleMessage(UserDTO userDTO, String message) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
@@ -31,6 +35,16 @@ public class UserService {
         mail.setText(getVerificationUrl(message));
         javaMailSender.send(mail);
     }
+
+    public void sendForgotPasswordMessage(UserDTO userDTO ,String mail) throws MailException {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("tejasvinirpk@gmail.com");
+        message.setTo(userDTO.getEmailId());
+        message.setSubject("Forgot password message");
+        message.setText("You will need to reset your password with token :" +mail );
+        javaMailSender.send(message);
+    }
+
 
     public void sendTokenUrl(UserDTO userDTO, String message) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
@@ -54,6 +68,7 @@ public class UserService {
         user.setMobileNo(userDTO.getMobileNo());
         user.setEmail(userDTO.getEmailId());
         user.setPassword(userDTO.getPassword());
+       /* user.setPassword(passwordEncoder.encode(userDTO.getPassword()));*/
         UserDetails registeredUser = userRepository.save(user);
         String token = TokenUtility.getToken(registeredUser.getId());
         sendSimpleMessage(userDTO,token);
@@ -69,15 +84,9 @@ public class UserService {
         UserDetails user = findByEmail(userDTO.getEmailId());
         if (user.getEmail().equals(userDTO.getEmailId())) {
             if (user.isVerified()) {
-                if (user.getPassword().equals(userDTO.getPassword())) {
-                    Optional<UserDetails> userDetails = userRepository.findByEmail(userDTO.getEmailId());
-                    if (userDetails.isPresent()) {
-                        String token = TokenUtility.getToken(userDetails.get().getId());
-                        sendTokenUrl(userDTO, token);
-                        return "Please check your email";
-                    }
-                    return "Successfully logged in";
-                }
+                if (user.getPassword().equals(userDTO.getPassword()))
+                   return TokenUtility.getToken(user.getId());
+                else
                 return "Wrong password given";
             }
             return "Please do the verification first";
@@ -97,16 +106,16 @@ public class UserService {
         return "Verification is successful";
     }
 
-
-    public String generatingPasswordToken(UserDTO userDTO) {
+    public String forgotPassword(UserDTO userDTO) {
         Optional<UserDetails> user = userRepository.findByEmail(userDTO.getEmailId());
         if (user.isPresent()) {
             String token = TokenUtility.getToken(user.get().getId());
-            sendTokenUrl(userDTO,token);
-            return "Check your email please!";
+            sendForgotPasswordMessage(userDTO,token);
+            return "Please check the mail that you have provided ";
         }
-        return "Email given is incorrect";
+        return "Email provided by you is incorrect";
     }
+
 
     public String settingPassword(String token, Password password) {
         Optional<UserDetails> user = userRepository.findById(TokenUtility.decodeJWT(token));
@@ -117,4 +126,5 @@ public class UserService {
         }
         return "Password is incorrect!";
     }
+
 }

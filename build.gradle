@@ -65,6 +65,11 @@ dependencies {
     compile group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
 
 
+    /*// https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.4.RELEASE'*/
+
+  // https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.4.1'
 
 }
 
