@@ -44,24 +44,24 @@ public class UserService {
         message.setText("You will need to reset your password with token :" +mail );
         javaMailSender.send(message);
     }
-    
+
     public String getVerificationUrl(String token) {
-        return "http://localhost:8080/user/"+token;
+        return "Click on the verification link given : http://localhost:8080/user/"+token;
     }
 
     public String registerUser(UserDTO userDTO) {
         if (userRepository.findByEmail(userDTO.getEmailId()).isPresent())
-            return "Email already exists";
+            return "The email provided already exists!";
         UserDetails user = new UserDetails();
         user.setName(userDTO.getName());
         user.setMobileNo(userDTO.getMobileNo());
         user.setEmail(userDTO.getEmailId());
-        /*user.setPassword(userDTO.getPassword());*/
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPassword(userDTO.getPassword());
+       // user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         UserDetails registeredUser = userRepository.save(user);
         String token = TokenUtility.getToken(registeredUser.getId());
         sendSimpleMessage(userDTO,token);
-        return "Registration done";
+        return "Registration is done successfully!";
     }
 
     public UserDetails findByEmail(String emailId) {
@@ -74,35 +74,35 @@ public class UserService {
         if (user.getEmail().equals(userDTO.getEmailId())) {
             if (user.isVerified()) {
                 if (user.getPassword().equals(userDTO.getPassword()))
-                   return TokenUtility.getToken(user.getId());
+                   return "You have logged in successfully with the token : " + TokenUtility.getToken(user.getId());
                 else
-                return "Wrong password given";
+                return "You have entered the wrong password.";
             }
-            return "Please do the verification first";
+            return "Please do the verification first!";
         }
-        return "Email with which you have logged in is wrong";
+        return "Email with which you have logged in is wrong.";
     }
 
     public String deleteUser(UserDTO userDTO){
         userRepository.delete(findByEmail(userDTO.getEmailId()));
-        return "User deleted";
+        return "User has been deleted";
     }
 
     public String verifyingUser(String token) {
         Optional<UserDetails> user = userRepository.findById((TokenUtility.decodeJWT(token)));
         user.get().setVerified(true);
         userRepository.save(user.get());
-        return "Verification is successful";
+        return "Verification has been done successful!";
     }
 
-    public String forgotPassword(UserDTO userDTO) {
+    public String forgottenPassword(UserDTO userDTO) {
         Optional<UserDetails> user = userRepository.findByEmail(userDTO.getEmailId());
         if (user.isPresent()) {
             String token = TokenUtility.getToken(user.get().getId());
             sendForgotPasswordMessage(userDTO,token);
-            return "Please check the mail that you have provided ";
+            return "Please check the email that you have provided. ";
         }
-        return "Email provided by you is incorrect";
+        return "Email provided by you is incorrect.";
     }
 
 
@@ -111,7 +111,7 @@ public class UserService {
         if (password.getNewPassword().equals(password.getConfirmPassword())) {
             user.get().setPassword(password.getConfirmPassword());
             userRepository.save(user.get());
-            return "Password has been changed";
+            return "Password has been changed!";
         }
         return "Password is incorrect!";
     }

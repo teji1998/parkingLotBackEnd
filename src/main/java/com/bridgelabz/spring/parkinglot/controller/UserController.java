@@ -22,13 +22,13 @@ public class UserController {
     }
 
     @PostMapping("/loginuser")
-    public ResponseEntity getLoginUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity loginUser(@RequestBody UserDTO userDTO) {
         String user = userService.loginUser(userDTO);
         return new ResponseEntity(user, HttpStatus.OK);
     }
 
     @PostMapping("/forgotpassword")
-    public ResponseEntity getForgotPassword(@RequestBody UserDTO userDTO) {
+    public ResponseEntity forgotPassword(@RequestBody UserDTO userDTO) {
         String user = userService.forgotPassword(userDTO);
         return new ResponseEntity(user, HttpStatus.OK);
     }
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity forgotPassword(@RequestHeader String token, @RequestBody Password password) {
+    public ResponseEntity resetPassword(@RequestHeader String token, @RequestBody Password password) {
         String message = userService.settingPassword(token,password);
         return new ResponseEntity(message,HttpStatus.OK);
     }
