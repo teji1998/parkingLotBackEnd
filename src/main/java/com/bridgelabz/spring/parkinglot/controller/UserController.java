@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping("/forgotpassword")
     public ResponseEntity forgotPassword(@RequestBody UserDTO userDTO) {
-        String user = userService.forgotPassword(userDTO);
+        String user = userService.forgottenPassword(userDTO);
         return new ResponseEntity(user, HttpStatus.OK);
     }
 
@@ -50,5 +50,4 @@ public class UserController {
         String message = userService.settingPassword(token,password);
         return new ResponseEntity(message,HttpStatus.OK);
     }
-
 }
