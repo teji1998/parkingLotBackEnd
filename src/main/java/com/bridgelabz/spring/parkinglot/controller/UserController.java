@@ -20,6 +20,7 @@ public class UserController {
         String registrationMessage = userService.registerUser(userDTO);
         return new ResponseEntity(registrationMessage, HttpStatus.OK);
     }
+
     @PostMapping("/loginuser")
     public ResponseEntity getLoginUser(@RequestBody UserDTO userDTO) {
         String user = userService.loginUser(userDTO);
@@ -37,7 +38,8 @@ public class UserController {
         String deleteMessage = userService.deleteUser(userDTO);
         return new ResponseEntity(deleteMessage, HttpStatus.OK);
     }
-   @GetMapping("/{token}")
+
+    @GetMapping("/{token}")
     public ResponseEntity verifyUser(@PathVariable String token) {
         String response = userService.verifyingUser(token);
         return new ResponseEntity(response, HttpStatus.OK);

@@ -17,6 +17,5 @@ public class SwaggerConfig {
                 .basePackage("com.bridgelabz.spring.parkinglot"))
                 .paths(PathSelectors.any())
                 .build();
-
     }
 }

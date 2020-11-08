@@ -12,6 +12,7 @@ import javax.persistence.Id;
 @Getter
 @Setter
 public class UserDetails {
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -20,4 +21,5 @@ public class UserDetails {
     private String email;
     private String password;
     private boolean isVerified;
+
 }

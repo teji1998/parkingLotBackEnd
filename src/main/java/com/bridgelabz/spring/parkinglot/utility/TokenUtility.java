@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
 
 public class TokenUtility {
+
     /**
      * this method is used to create a jwt token.
      */

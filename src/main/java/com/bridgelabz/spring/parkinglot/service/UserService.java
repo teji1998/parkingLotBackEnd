@@ -45,7 +45,6 @@ public class UserService {
         javaMailSender.send(message);
     }
 
-
     public void sendTokenUrl(UserDTO userDTO, String message) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setFrom("tejasvinirpk@gmail.com");
@@ -58,7 +57,6 @@ public class UserService {
     public String getVerificationUrl(String token) {
         return "http://localhost:8080/user/"+token;
     }
-
 
     public String registerUser(UserDTO userDTO) {
         if (userRepository.findByEmail(userDTO.getEmailId()).isPresent())
