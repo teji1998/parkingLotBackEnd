@@ -23,9 +23,9 @@ public class UserService {
 
     @Autowired
     JavaMailSender javaMailSender;
-/*
+
     @Autowired
-    PasswordEncoder passwordEncoder;*/
+    PasswordEncoder passwordEncoder;
 
     public void sendSimpleMessage(UserDTO userDTO, String message) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
@@ -67,8 +67,8 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setMobileNo(userDTO.getMobileNo());
         user.setEmail(userDTO.getEmailId());
-        user.setPassword(userDTO.getPassword());
-       /* user.setPassword(passwordEncoder.encode(userDTO.getPassword()));*/
+        /*user.setPassword(userDTO.getPassword());*/
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         UserDetails registeredUser = userRepository.save(user);
         String token = TokenUtility.getToken(registeredUser.getId());
         sendSimpleMessage(userDTO,token);
