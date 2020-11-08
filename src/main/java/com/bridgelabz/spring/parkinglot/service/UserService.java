@@ -44,16 +44,7 @@ public class UserService {
         message.setText("You will need to reset your password with token :" +mail );
         javaMailSender.send(message);
     }
-
-    public void sendTokenUrl(UserDTO userDTO, String message) throws MailException {
-        SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setFrom("tejasvinirpk@gmail.com");
-        mail.setTo(userDTO.getEmailId());
-        mail.setSubject("Token link");
-        mail.setText(message);
-        javaMailSender.send(mail);
-    }
-
+    
     public String getVerificationUrl(String token) {
         return "http://localhost:8080/user/"+token;
     }
